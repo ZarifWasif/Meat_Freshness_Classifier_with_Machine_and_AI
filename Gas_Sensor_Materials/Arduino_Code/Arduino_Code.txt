@@ -1,0 +1,65 @@
+#define BUZZER_PIN 3
+const int LED_2 = 4; 
+const int LED_3 = 5;
+const int LED_4 = 6;
+#include <LiquidCrystal.h>
+const int rs = 12, en = 11, d4 = 10, d5 = 8, d6 = 7, d7 = 2;
+LiquidCrystal mylcd(rs, en, d4, d5, d6, d7);
+#define LCD_CONTRAST_PIN 13
+#define LCD_BLACKLIGHT_PIN 9
+
+void setup()
+{
+Serial.begin(9600);
+pinMode(LED_2,OUTPUT);
+}
+void loop()
+{
+  int mq4_value = analogRead(A1);
+  int mq135_value = analogRead(A0);
+  String c = String(mq135_value) + " " + String(mq4_value);
+  
+  Serial.print(mq4_value);
+  Serial.print(',');
+  Serial.println(mq135_value);
+  
+  analogWrite(LCD_BLACKLIGHT_PIN,10);
+  analogWrite(LCD_CONTRAST_PIN,500);
+  mylcd.begin(16, 2);
+  mylcd.print(c);
+
+  if(mq135_value > 100 && mq135_value <300 && mq4_value > 4 && mq4_value <8  )
+    {
+      analogWrite(BUZZER_PIN, 50);
+      digitalWrite(LED_2, HIGH);       
+    }    
+   else 
+    {
+      analogWrite(BUZZER_PIN, 0);
+      digitalWrite(LED_2, LOW);
+    }
+       
+  if(mq135_value > 400 && mq4_value>9)
+    {
+      analogWrite(BUZZER_PIN, 50);
+      digitalWrite(LED_3, HIGH);       
+    }    
+   else
+    {
+      analogWrite(BUZZER_PIN, 0);
+      digitalWrite(LED_3, LOW);
+    }
+      if(mq135_value > 600 && mq4_value > 9 )
+    {
+      analogWrite(BUZZER_PIN, 50);
+      digitalWrite(LED_4, HIGH);       
+    }    
+   else
+    {
+      analogWrite(BUZZER_PIN, 0);
+      digitalWrite(LED_4, LOW);
+    }
+      delay(100);
+  
+  
+}
